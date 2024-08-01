@@ -10,13 +10,13 @@ public:
                 if (j == 0)
                     dp[i][j] = 0;
                 else if (i == 0)
-                    dp[i][j] = 1e5;
+                    dp[i][j] = INT_MAX - 1;
                 else if (j < coins[i - 1])
                     dp[i][j] = dp[i - 1][j];
                 else
                     dp[i][j] = min(1 + dp[i][j - coins[i - 1]], dp[i - 1][j]);
             }
         }
-        return dp[n][sum] > 1e4 ? -1 : dp[n][sum];
+        return dp[n][sum] == INT_MAX - 1 ? -1 : dp[n][sum];
     }
 };
