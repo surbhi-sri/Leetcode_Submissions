@@ -8,7 +8,7 @@ public:
             if (nums[i] == 1)
                 cnt++;
 
-        if (cnt == n || cnt == n - 1)
+        if (cnt == n || cnt == n - 1 || cnt == 0)
             return 0;
 
         int curr = 0, temp = 0, j = 1, i;
