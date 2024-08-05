@@ -9,8 +9,6 @@ public:
             for (int j = 1; j <= m; j++) {
                 if (x[i - 1] == y[j - 1])
                     dp[i][j] = 1 + dp[i - 1][j - 1];
-                else
-                    dp[i][j] = 0;
                 mx = max(mx, dp[i][j]);
             }
         }
