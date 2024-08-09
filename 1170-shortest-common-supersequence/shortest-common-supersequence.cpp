@@ -28,41 +28,26 @@ public:
                 i--;
                 j--;
             } else {
-                if (dp[i - 1][j] > dp[i][j - 1])
+                if (dp[i - 1][j] > dp[i][j - 1]) {
+                    s += x[i - 1];
                     i--;
-                else
+                } else {
+                    s += y[j - 1];
                     j--;
+                }
             }
+        }
+
+        while (i > 0) {
+            s += x[i - 1];
+            i--;
+        }
+        while (j > 0) {
+            s += y[j - 1];
+            j--;
         }
         reverse(s.begin(), s.end());
-        int num = s.size();
-        string ans = "";
-        i = 0, j = 0;
-        int k = 0;
-        while (k < num) {
-            while (x[i] != s[k]) {
-                ans += x[i];
-                i++;
-            }
-            while (y[j] != s[k]) {
-                ans += y[j];
-                j++;
-            }
-            while (k < num && x[i] == s[k] && y[j] == s[k]) {
-                ans += s[k];
-                i++;
-                j++;
-                k++;
-            }
-        }
-        while (i < n) {
-            ans += x[i];
-            i++;
-        }
-        while (j < m) {
-            ans += y[j];
-            j++;
-        }
-        return ans;
+        
+        return s;
     }
 };
