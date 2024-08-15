@@ -29,11 +29,6 @@ public:
 
                 int temp = 1;
 
-                if (dp[i][k] != -1)
-                    temp  += dp[i][k];
-                else
-                    temp += solve(s, i, k, dp);
-
                 if (dp[k + 1][j] != -1)
                     temp += dp[k + 1][j];
                 else
