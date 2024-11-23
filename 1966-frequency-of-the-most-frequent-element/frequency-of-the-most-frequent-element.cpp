@@ -15,7 +15,7 @@ public:
                     count++;
                 }
                 if(j == n) break;
-                if(j<n) kn -= (ele - nums[j]);
+                 kn -= (ele - nums[j]);
                 if (kn < 0)
                     break;
                 count++;
