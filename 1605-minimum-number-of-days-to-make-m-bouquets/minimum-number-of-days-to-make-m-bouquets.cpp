@@ -9,7 +9,7 @@ public:
         return {mn, mx};
     }
 
-    int n_bouquets(vector<int>& bloomDay, int n, int days, int k) {
+    int n_bouquets(vector<int>& bloomDay, int n, int days, int k, int m) {
         int cnt = 0, bouquets = 0;
         for (int i = 0; i < n; i++) {
             if (bloomDay[i] <= days) {
@@ -18,6 +18,7 @@ public:
                     bouquets++;
                     cnt = 0;
                 }
+            if(bouquets>=m) return m;
             } else {
                 cnt = 0;
             }
@@ -38,7 +39,7 @@ public:
 
         while (low <= high) {
             int mid = (low + high) / 2;
-            int bouquets = n_bouquets(bloomDay, n, mid, k);
+            int bouquets = n_bouquets(bloomDay, n, mid, k, m);
             if (bouquets >= m) {
                 ans = min(mid, ans);
                 high = mid - 1;
