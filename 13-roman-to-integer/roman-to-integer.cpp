@@ -1,31 +1,18 @@
 class Solution {
 public:
     int romanToInt(string s) {
-    unordered_map<string, int> mp;
-    mp["M"]=1000;
-    mp["CM"]=900;
-    mp["D"]=500;
-    mp["CD"]=400;
-    mp["C"]=100;
-    mp["XC"]=90;
-    mp["L"]=50;
-    mp["XL"]=40;
-    mp["X"]=10;
-    mp["IX"]=9;
-    mp["V"]=5;
-    mp["IV"]=4;
-    mp["I"]=1;
-    int sum=0;
-    int n=s.size(),i=0;
-    while(i<n){
-    string temp="";
-    while(i<n && mp.find(temp+s[i])!=mp.end()){
-    temp += s[i];
-    i++;
-    }
-    sum += mp[temp];
-    }
+        unordered_map<char, int> mp{{'I', 1},   {'V', 5},   {'X', 10},
+                                      {'L', 50},  {'C', 100}, {'D', 500},
+                                      {'M', 1000}};
+        int sum = 0;
+        int n = s.size();
+        for (int i = 0; i < n; i++) {
+            if (i + 1 < n && mp[s[i + 1]] > mp[s[i]])
+                sum -= mp[s[i]];
+            else
+                sum += mp[s[i]];
+        }
 
-    return sum;
+        return sum;
     }
 };
