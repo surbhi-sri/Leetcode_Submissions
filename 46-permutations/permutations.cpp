@@ -12,11 +12,9 @@ public:
         }
     }
 
-vector<vector<int>>
-permute(vector<int>& nums) {
-    vector<vector<int>> ans;
-    permutate(nums, 0, ans);
-    return ans;
-}
-}
-;
+    vector<vector<int>> permute(vector<int>& nums) {
+        vector<vector<int>> ans;
+        permutate(nums, 0, ans);
+        return ans;
+    }
+};
