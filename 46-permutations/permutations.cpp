@@ -1,27 +1,22 @@
 class Solution {
 public:
-    void permutate(vector<int> &nums, vector<int> freq, vector<int> &temp,
-                   vector<vector<int>> &ans) {
-        if (temp.size() == nums.size()) {
-            ans.push_back(temp);
+    void permutate(vector<int>& nums, int ind, vector<vector<int>>& ans) {
+        if (ind == nums.size()) {
+            ans.push_back(nums);
             return;
         }
-        for (int i = 0; i < nums.size(); i++) {
-            if (!freq[i]) {
-                freq[i] = 1;
-                temp.push_back(nums[i]);
-                permutate(nums, freq, temp, ans);
-                freq[i] = 0;
-                temp.pop_back();
-            }
+        for (int i = ind; i < nums.size(); i++) {
+            swap(nums[ind], nums[i]);
+            permutate(nums, ind + 1, ans);
+            swap(nums[ind], nums[i]);
         }
     }
 
-    vector<vector<int>> permute(vector<int>& nums) {
-        vector<vector<int>> ans;
-        vector<int> temp;
-        vector<int> freq(nums.size(), 0);
-        permutate(nums, freq, temp, ans);
-        return ans;
-    }
-};
+vector<vector<int>>
+permute(vector<int>& nums) {
+    vector<vector<int>> ans;
+    permutate(nums, 0, ans);
+    return ans;
+}
+}
+;
