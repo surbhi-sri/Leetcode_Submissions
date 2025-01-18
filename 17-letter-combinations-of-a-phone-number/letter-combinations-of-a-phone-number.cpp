@@ -1,23 +1,26 @@
 class Solution {
 public:
-    vector<string> ans;
-    string keyPad[10] = {"", "", "abc", "def", "ghi", "jkl", "mno", "qprs", "tuv", "wxyz"};
-    
-    void backtrack(int index, string& path, const string& digits) {
-        if (index == digits.size()) {
-            ans.push_back(path);
+    void solve(int ind, string& s, string &digit, vector<string>& ans,
+               vector<string> alpha) {
+        if (ind == digit.size()){
+            ans.push_back(s);
             return;
         }
-        for (char c : keyPad[digits[index] - '0']) {
-            path[index] = c;
-            backtrack(index + 1, path, digits);
+
+        for(char c: alpha[digit[ind]-'0']){
+            s.push_back(c);
+             solve(ind+1, s, digit, ans, alpha);
+            s.pop_back(); 
         }
     }
-    
-    vector<string> letterCombinations(const string& digits) {
-        if (digits.empty()) return ans;
-        string path = digits;
-        backtrack(0, path, digits);
+
+    vector<string> letterCombinations(string digits) {
+        if(digits.empty()) return {};
+        vector<string> alpha = {"",    "",    "abc",  "def", "ghi",
+                                "jkl", "mno", "pqrs", "tuv", "wxyz"};
+        string s;
+        vector<string> ans;
+        solve(0, s, digits, ans, alpha);
         return ans;
     }
 };
