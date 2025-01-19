@@ -9,13 +9,14 @@ public:
             return;
         }
 
+        string temp = "";
+        long long curr = 0;
+
         for (int i = ind; i < num.size(); i++) {
             if (i > ind && num[ind] == '0')
                 break;
-            string temp = num.substr(ind, (i - ind + 1));
-
-            long long curr = stol(temp);
-
+            temp += num[i];
+            curr = curr * 10 + (num[i] - '0');
             if (ind == 0) {
                 solve(ans, path + temp, curr, curr, i + 1, num, target);
             } else {
