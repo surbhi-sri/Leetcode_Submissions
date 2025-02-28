@@ -11,7 +11,6 @@ public:
             vector<int> temp(m, 0);
             for (int j = 0; j < m; j++) {
                 if (i == 0){
-                    dp[j] = matrix[i][j];
                     temp[j] = matrix[i][j];
                     }
                 else {
