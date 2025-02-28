@@ -26,6 +26,6 @@ public:
             dp = temp;
         }
 
-        return *min_element(dp.begin(), dp.end());
+        return mn;
     }
 };
