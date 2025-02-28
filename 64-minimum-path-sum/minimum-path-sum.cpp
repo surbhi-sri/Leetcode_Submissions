@@ -5,21 +5,21 @@ public:
         int n = grid.size();
         int m = grid[0].size();
 
-        vector<vector<int>> dp(n, vector<int>(m, 0));
+        vector<int> dp(m, 0);
 
         for (int i = 0; i < n; i++) {
             for (int j = 0; j < m; j++) {
                 if (i == 0 && j == 0)
-                    dp[i][j] = grid[i][j];
-                else {
-                    int left = (j > 0) ? dp[i][j - 1] : INT_MAX;
-                    int up = (i > 0) ? dp[i - 1][j] : INT_MAX;
-
-                    dp[i][j] = min(left, up) + grid[i][j];
-                }
+                    dp[j] = grid[i][j];
+                else if (i == 0)
+                    dp[j] = dp[j - 1] + grid[i][j];
+                else if (j == 0)
+                    dp[j] += grid[i][j];
+                else
+                   dp[j]=min(dp[j], dp[j-1])+grid[i][j];
             }
         }
 
-        return dp[n - 1][m - 1];
+        return dp[m - 1];
     }
 };
