@@ -2,34 +2,43 @@ class Solution {
 public:
     const int MOD = 1e9 + 7;
 
+    int count(int n, int sum, vector<int>& arr, vector<vector<int>>& dp) {
+        if (n == 0) {
+            if (arr[0] == 0 && sum == 0)
+                return 2;
+            if (sum == 0 || sum == arr[0])
+                return 1;
+            return 0;
+        }
+
+        if (dp[n][sum] != -1)
+            return dp[n][sum];
+
+        int notTake = count(n - 1, sum, arr, dp);
+        int take = 0;
+
+        if (arr[n] <= sum)
+            take = count(n - 1, sum - arr[n], arr, dp);
+
+        return dp[n][sum] = take + notTake;
+    }
+
     int findTargetSumWays(vector<int>& nums, int target) {
-        
-            int n = nums.size();
+        int n = nums.size();
         int sum = 0;
+
         for (int i = 0; i < n; i++)
             sum += nums[i];
 
-        sum += target;
+        sum -= target;
 
-        if (sum % 2 || sum < 0)
+        if (sum < 0 || sum % 2)
             return 0;
+
         sum /= 2;
 
-        vector<vector<int>> dp(n + 1, vector<int>(sum + 1, 0));
+        vector<vector<int>> dp(n, vector<int>(sum + 1, -1));
 
-        for (int i = 0; i < n; i++)
-            dp[i][0] = 1;
-
-        for (int i = 1; i <= n; i++) {
-            for (int j = 0; j <= sum; j++) {
-                if (j < nums[i - 1])
-                    dp[i][j] = dp[i - 1][j];
-                else
-                    dp[i][j] =
-                        (dp[i - 1][j - nums[i - 1]] + dp[i - 1][j]) % MOD;
-            }
-        }
-
-        return dp[n][sum];
+        return count(n - 1, sum, nums, dp);
     }
 };
