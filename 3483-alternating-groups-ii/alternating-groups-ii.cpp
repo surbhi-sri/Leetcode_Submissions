@@ -4,25 +4,38 @@ public:
 
         int n = colors.size();
 
-        for (int i = 0; i < k-1; i++)
-            colors.push_back(colors[i]);
+        int cnt = 0, length=1;
+        int last=colors[0];
+
+        for(int i=1; i<n; i++){
+
+          if(colors[i]==last){
+            length=1;
+            last=colors[i];
+
+            continue;
+          }
+
+          length++;
+           last=colors[i];
+
+           if(length>=k)  cnt++;
+        }
 
 
-        n= (n+k-1);
+        for(int i=0; i<k-1; i++){
 
-        int cnt = 0;
+          if(colors[i]==last){
+            length=1;
+            last=colors[i];
 
-        int i = 0, j = 1;
+            continue;
+          }
 
-        for (int j = 1; j < n; j++) {
-            if (colors[j] == colors[j - 1]) {
-                i = j;
-                continue;
-            }
-            if (j - i == k - 1) {
-                i++;
-                cnt++;
-            }
+          length++;
+           last=colors[i];
+
+           if(length>=k)  cnt++;
         }
 
         return cnt;
