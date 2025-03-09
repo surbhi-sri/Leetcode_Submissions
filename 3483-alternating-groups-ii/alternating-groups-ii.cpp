@@ -17,7 +17,6 @@ public:
         for (int j = 1; j < n; j++) {
             if (colors[j] == colors[j - 1]) {
                 i = j;
-               // j++;
                 continue;
             }
             if (j - i == k - 1) {
