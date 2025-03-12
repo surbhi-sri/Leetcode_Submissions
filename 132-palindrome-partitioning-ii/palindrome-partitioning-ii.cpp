@@ -1,49 +1,44 @@
 class Solution {
 public:
-    bool ispalindrome(string& s, int i, int j) {
-        if (i == j)
-            return 1;
-        if (i > j)
-            return 0;
-        while (i < j) {
-            if (s[i] != s[j])
+    bool ispalindrome(int i, int j, string& temp) {
+       if(i==j) return 1;
+
+        while (i <= j) {
+            if (temp[i] != temp[j])
                 return 0;
             i++;
             j--;
         }
+
         return 1;
     }
 
-    int solve(string& s, int i, int j, vector<vector<int>>& dp) {
+    int solve(int i, int n, string& s, vector<int> &dp) {
 
-        if (i >= j || ispalindrome(s, i, j))
+        if (i == n)
             return 0;
 
-        if (dp[i][j] != -1)
-            return dp[i][j];
+        if (dp[i] != -1)
+            return dp[i];
 
-        int mn = INT_MAX;
+        int min_cut = n;
 
-        for (int k = i; k < j; k++) {
-            if (ispalindrome(s, i, k)) {
+        for (int ind = i; ind < n; ind++) {
 
-                int temp = 1;
-
-                if (dp[k + 1][j] != -1)
-                    temp += dp[k + 1][j];
-                else
-                    temp += solve(s, k + 1, j, dp);
-
-                if (temp < mn)
-                    mn = temp;
+            if (ispalindrome(i, ind, s)) {
+                int cut = 1 + solve(ind + 1, n, s, dp);
+                min_cut=min(min_cut, cut);
             }
         }
-        return dp[i][j] = mn;
+
+        return dp[i] = min_cut;
     }
 
     int minCut(string s) {
         int n = s.size();
-        vector<vector<int>> dp(n, vector<int>(n, -1));
-        return solve(s, 0, n - 1, dp);
+
+        vector<int>  dp(n + 1, -1);
+
+        return solve(0, n, s, dp)-1;
     }
 };
