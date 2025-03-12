@@ -13,32 +13,26 @@ public:
         return 1;
     }
 
-    int solve(int i, int n, string& s, vector<int> &dp) {
+   
+    int minCut(string s) {
+        int n = s.size();
 
-        if (i == n)
-            return 0;
+        vector<int>  dp(n + 1, 0);
 
-        if (dp[i] != -1)
-            return dp[i];
-
+        for(int i=n-1; i>=0; i--){
         int min_cut = n;
 
         for (int ind = i; ind < n; ind++) {
 
             if (ispalindrome(i, ind, s)) {
-                int cut = 1 + solve(ind + 1, n, s, dp);
+                int cut = 1 + dp[ind + 1];
                 min_cut=min(min_cut, cut);
             }
         }
 
-        return dp[i] = min_cut;
-    }
+         dp[i] = min_cut;
+        }
 
-    int minCut(string s) {
-        int n = s.size();
-
-        vector<int>  dp(n + 1, -1);
-
-        return solve(0, n, s, dp)-1;
+        return dp[0]-1;
     }
 };
