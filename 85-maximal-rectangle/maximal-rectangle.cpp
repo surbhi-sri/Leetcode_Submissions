@@ -7,7 +7,7 @@ public:
 
         for (int i = 0; i <= n; i++) {
 
-            while (!st.empty() && (i == n || height[st.top()] >= height[i])) {
+            while (!st.empty() && (i == n || height[st.top()] > height[i])) {
 
                 int h = height[st.top()];
                 st.pop();
