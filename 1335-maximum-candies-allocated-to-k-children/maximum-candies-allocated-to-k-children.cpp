@@ -19,6 +19,7 @@ public:
             long long cnt = 0;
             for (int i = 0; i < n; i++) {
                 cnt += (candies[i] / mid) % mod;
+                if(cnt>k) break;
             }
 
             if (cnt < k)
