@@ -7,8 +7,16 @@ public:
         int n = candies.size();
 
         int mx = 0;
-        for (int i = 0; i < n; i++)
+
+        long long total = 0;
+
+        for (int i = 0; i < n; i++) {
             mx = max(mx, candies[i]);
+            total += candies[i];
+        }
+
+        if (total < k)
+            return 0;
 
         int maxi = 0;
         int l = 1, r = mx;
@@ -19,7 +27,8 @@ public:
             long long cnt = 0;
             for (int i = 0; i < n; i++) {
                 cnt += (candies[i] / mid) % mod;
-                if(cnt>k) break;
+                if (cnt > k)
+                    break;
             }
 
             if (cnt < k)
