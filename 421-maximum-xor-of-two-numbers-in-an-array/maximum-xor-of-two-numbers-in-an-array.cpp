@@ -15,7 +15,7 @@ public:
         trieNode* root;
 
     public:
-        Trie() { root = new trieNode; }
+        Trie() { root = new trieNode(); }
 
         void insert(int num) {
             trieNode* node = root;
