@@ -9,27 +9,37 @@ public:
 
         int n = recipes.size();
 
-        int added = 1;
-        
-        while (added) {
-            added = 0;
-            for (int i = 0; i < n; i++) {
-                if (st.count(recipes[i]))
-                    continue;
-                int flag = 1;
-                for (int j = 0; j < ingredients[i].size(); j++) {
-                    if (st.find(ingredients[i][j]) == st.end()) {
-                        flag = 0;
-                        break;
-                    }
-                }
-                if (flag) {
-                    ans.push_back(recipes[i]);
-                    st.insert(recipes[i]);
-                    added = 1;
+        unordered_map<string, vector<int>> mp;
+        vector<int> indegree(n, 0);
+
+        for (int i = 0; i < n; i++) {
+            for (string& str : ingredients[i]) {
+                if (!st.count(str)) {
+                    mp[str].push_back(i);
+                    indegree[i]++;
                 }
             }
         }
+
+        queue<int> q;
+        for (int i = 0; i < n; i++) {
+            if (indegree[i] == 0)
+                q.push(i);
+        }
+
+        while (!q.empty()) {
+            int node = q.front();
+            q.pop();
+
+            ans.push_back(recipes[node]);
+
+            for (int& it : mp[recipes[node]]) {
+                indegree[it]--;
+                if (indegree[it] == 0)
+                    q.push(it);
+            }
+        }
+
         return ans;
     }
 };
