@@ -1,40 +1,69 @@
 class Solution {
 public:
-    void bfs(int i, vector<vector<int>>& adj, vector<bool>& vis, int &v, int &e) {
-      queue<int> q;
-      q.push(i);
+    class DSU {
+    public:
+        vector<int> parent;
+        vector<int> size;
 
-      while(!q.empty()){
-        int node=q.front();
-        vis[node]=1;;
-        q.pop();
-        v++;
+        DSU(int n) {
+            parent.resize(n);
+            size.resize(n);
 
-        for(auto it: adj[node]){
-           e++;
-           if(!vis[it]) bfs(it, adj, vis, v, e);
+            for (int i = 0; i < n; i++) {
+                parent[i] = i;
+                size[i] = 1;
+            }
         }
-      }
-    }
+
+        int find(int x) {
+            if (parent[x] == x)
+                return x;
+
+            return parent[x] = find(parent[x]);
+        }
+
+        void Union(int x, int y) {
+            int x_par = find(x);
+            int y_par = find(y);
+
+            if (x_par == y_par)
+                return;
+
+            if (size[x_par] > size[y_par]) {
+                parent[y_par] = x_par;
+                size[x_par] += size[y_par];
+            } else {
+                parent[x_par] = y_par;
+                size[y_par] += size[x_par];
+            }
+        }
+    };
 
     int countCompleteComponents(int n, vector<vector<int>>& edges) {
-        vector<vector<int>> adj(n);
+        DSU dsu(n);
+        unordered_map<int, int> mp;
 
         for (auto& edges : edges) {
 
-            adj[edges[0]].push_back(edges[1]);
-            adj[edges[1]].push_back(edges[0]);
+            int u = edges[0];
+            int v = edges[1];
+            dsu.Union(u, v);
         }
 
-        vector<bool> vis(n, 0);
-        int res = 0;
+        for (auto& edges : edges) {
 
+            int u = edges[0];
+            int v = edges[1];
+            int root = dsu.find(u);
+            mp[root]++;
+        }
+
+        int res = 0;
         for (int i = 0; i < n; i++) {
-            if (!vis[i]) {
-                int v = 0;
-                int e = 0;
-                bfs(i, adj, vis, v, e);
-                if (v * (v - 1) == e)
+            if (dsu.find(i) == i) {
+                int v = dsu.size[i];
+                int e = mp[i];
+                 if (v * (v - 1) / 2 == e)
                     res++;
             }
         }
