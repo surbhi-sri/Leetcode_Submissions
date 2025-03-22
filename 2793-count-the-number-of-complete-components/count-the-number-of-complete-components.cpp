@@ -1,15 +1,20 @@
 class Solution {
 public:
-    void dfs(int node, vector<vector<int>>& adj, vector<bool>& vis, int &v, int &e) {
-        vis[node] = 1;
+    void bfs(int i, vector<vector<int>>& adj, vector<bool>& vis, int &v, int &e) {
+      queue<int> q;
+      q.push(i);
+
+      while(!q.empty()){
+        int node=q.front();
+        vis[node]=1;;
+        q.pop();
         v++;
-       
-        for (auto it : adj[node]) {
-            e++;
-            if (!vis[it]) {
-                dfs(it, adj, vis, v, e);
-            }
+
+        for(auto it: adj[node]){
+           e++;
+           if(!vis[it]) bfs(it, adj, vis, v, e);
         }
+      }
     }
 
     int countCompleteComponents(int n, vector<vector<int>>& edges) {
@@ -28,7 +33,7 @@ public:
             if (!vis[i]) {
                 int v = 0;
                 int e = 0;
-                dfs(i, adj, vis, v, e);
+                bfs(i, adj, vis, v, e);
                 if (v * (v - 1) == e)
                     res++;
             }
