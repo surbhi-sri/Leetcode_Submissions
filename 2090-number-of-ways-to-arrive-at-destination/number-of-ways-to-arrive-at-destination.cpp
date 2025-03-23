@@ -1,49 +1,47 @@
 class Solution {
 public:
     int countPaths(int n, vector<vector<int>>& roads) {
-        vector<vector<pair<int, long long>>> adj(n);
+        vector<vector<pair<int, int>>> adj(n);
 
-        for (auto &it : roads) {
-            int u = it[0];
-            int v = it[1];
-            int t = it[2];
-
-            adj[u].push_back({v, t});
-            adj[v].push_back({u, t});
+        for (auto &road : roads) {
+            adj[road[0]].push_back({road[1], road[2]});
+            adj[road[1]].push_back({road[0], road[2]});
         }
 
         priority_queue<pair<long long, int>, vector<pair<long long, int>>,
-                       greater<>>
+                       greater<pair<long long, int>>>
             pq;
-        // time, node;
+
         pq.push({0, 0});
-
-         vector<long long> time(n, LLONG_MAX);
+        vector<long long> time(n, LLONG_MAX);
         vector<int> ways(n, 0);
-        time[0] = 0;
-        ways[0] = 1;
 
-        int mod=(int)(1e9+7);
+        time[0] = 0;
+        ways[0]=1;
+
+        int mod = (int)(1e9+7);
 
         while (!pq.empty()) {
-            long long times = pq.top().first;
-            int node = pq.top().second;
+            auto it = pq.top();
             pq.pop();
+
+            long long times = it.first;
+            int node = it.second;
 
             for (auto &it : adj[node]) {
                 int adN = it.first;
-                long long adT = it.second;
+                long long adt = it.second;
 
-                if (times + adT < time[adN]) {
-                    time[adN] = times + adT;
+                if (adt + times < time[adN]) {
                     ways[adN] = ways[node];
+                    time[adN] = adt + times;
                     pq.push({time[adN], adN});
-                } else if (times + adT == time[adN]) {
-                    ways[adN] =(ways[adN] + ways[node])%mod;
+                } else if (adt + times == time[adN]) {
+                    ways[adN] = (ways[adN] + ways[node])%mod;
                 }
             }
         }
 
-        return ways[n-1];
+        return ways[n - 1];
     }
 };
