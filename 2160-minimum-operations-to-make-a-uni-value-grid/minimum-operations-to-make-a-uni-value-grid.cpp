@@ -20,46 +20,13 @@ public:
         sort(vec.begin(), vec.end());
         n = vec.size();
 
-        vector<int> lsum(n, 0);
-        vector<int> rsum(n, 0);
+        int target = vec[n / 2];
+        int operation = 0;
 
-        int suml = 0;
-        int sumr = 0;
-
-        for (int i = 0; i < vec.size(); i++) {
-            suml += vec[i];
-            sumr += vec[n - i - 1];
-
-            lsum[i] = suml;
-            rsum[n - i - 1] = sumr;
+        for (int& num : vec) {
+            operation += abs(target - num) / x;
         }
 
-        int l = 0, r = n - 1;
-        int mn = INT_MAX;
-
-        while (l <= r) {
-            int mid = l + (r - l) / 2;
-
-            int operation = 0;
-
-            if (mid>0) {
-                operation += (vec[mid] * mid - lsum[mid - 1]) / x;
-            }
-
-            if (mid + 1 < n) {
-                operation += (rsum[mid + 1] - vec[mid] * (n - mid-1)) / x;
-            }
-
-            if (operation < mn)
-                mn = operation;
-
-            if (mid > 0 && vec[mid] - vec[mid - 1] > x) {
-                r = mid - 1; 
-            } else {
-                l = mid + 1; 
-            }
-        }
-
-        return mn;
+        return operation;
     }
 };
