@@ -16,18 +16,18 @@ public:
 
         cnt = 0;
 
-        vector<int> count;
-
         for (int num : nums) {
             if (num == dominant)
                 cnt++;
-            cout << cnt << " ";
-            count.push_back(cnt);
         }
+
+        int curr_cnt = 0;
 
         int n = nums.size();
         for (int i = 0; i < n; i++) {
-            if (count[i] > (i + 1) / 2 && (cnt - count[i]) > (n - i - 1)/2)
+            if (nums[i] == dominant)
+                curr_cnt++;
+            if (curr_cnt > (i + 1) / 2 && (cnt - curr_cnt) > (n - i - 1) / 2)
                 return i;
         }
 
