@@ -1,26 +1,22 @@
 class Solution {
 public:
-    long long solve(int ind, int n, vector<vector<int>>& questions, vector<long long>& dp) {
-        if (ind >= n)
-            return 0;
-
-        if (dp[ind] != -1)
-            return dp[ind];
-
-        long long notTake = solve(ind + 1, n, questions, dp);
-
-        long long take = questions[ind][0] +
-                   solve(ind + questions[ind][1] + 1, n, questions, dp);
-
-        return dp[ind] = max(take, notTake);
-    }
-
     long long mostPoints(vector<vector<int>>& questions) {
 
         int n = questions.size();
 
-        vector<long long> dp(n + 1, -1);
+        vector<long long> dp(n + 1, 0);
 
-        return solve(0, n, questions, dp);
+        for (int ind = n - 1; ind >= 0; ind--) {
+            long long notTake = dp[ind + 1];
+
+            long long take = questions[ind][0];
+
+            if (ind + questions[ind][1] + 1 <= n)
+                take += dp[ind + questions[ind][1] + 1];
+
+            dp[ind] = max(take, notTake);
+        }
+
+        return dp[0];
     }
 };
