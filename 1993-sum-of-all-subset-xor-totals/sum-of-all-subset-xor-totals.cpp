@@ -1,18 +1,17 @@
 class Solution {
 public:
-    void solve(int i, int n, vector<int>& temp, vector<int>& nums,
-               vector<vector<int>>& ans) {
+    void solve(int i, int n, int xorr, vector<int>& nums, int& sum) {
         if (i >= n) {
-            if (temp.size() >= 1)
-                ans.push_back(temp);
+            sum += xorr;
             return;
         }
 
-        temp.push_back(nums[i]);
-        solve(i + 1, n, temp, nums, ans);
+         int xorr2=xorr;
 
-        temp.pop_back();
-        solve(i + 1, n, temp, nums, ans);
+        xorr ^= nums[i];
+        solve(i + 1, n, xorr, nums, sum);
+
+        solve(i + 1, n, xorr2, nums, sum);
 
         return;
     }
@@ -23,19 +22,9 @@ public:
         vector<vector<int>> ans;
         vector<int> temp;
 
-        solve(0, n, temp, nums, ans);
+        int xorr = 0, sum = 0;
 
-        int sum = 0;
-        n = ans.size();
-
-        for (int i = 0; i < n; i++) {
-
-            int xorr = 0;
-            for (int j = 0; j < ans[i].size(); j++) {
-                xorr ^= ans[i][j];
-            }
-            sum += xorr;
-        }
+        solve(0, n, xorr, nums, sum);
 
         return sum;
     }
