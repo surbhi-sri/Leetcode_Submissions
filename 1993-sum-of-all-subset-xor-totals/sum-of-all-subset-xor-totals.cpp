@@ -19,9 +19,6 @@ public:
     int subsetXORSum(vector<int>& nums) {
         int n = nums.size();
 
-        vector<vector<int>> ans;
-        vector<int> temp;
-
         int xorr = 0, sum = 0;
 
         solve(0, n, xorr, nums, sum);
