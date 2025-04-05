@@ -1,28 +1,13 @@
 class Solution {
 public:
-    void solve(int i, int n, int xorr, vector<int>& nums, int& sum) {
-        if (i >= n) {
-            sum += xorr;
-            return;
-        }
-
-         int xorr2=xorr;
-
-        xorr ^= nums[i];
-        solve(i + 1, n, xorr, nums, sum);
-
-        solve(i + 1, n, xorr2, nums, sum);
-
-        return;
-    }
-
     int subsetXORSum(vector<int>& nums) {
         int n = nums.size();
 
-        int xorr = 0, sum = 0;
+        int orr = 0;
 
-        solve(0, n, xorr, nums, sum);
+        for (int i = 0; i < n; i++)
+            orr |= nums[i];
 
-        return sum;
+        return orr << (n - 1);
     }
 };
