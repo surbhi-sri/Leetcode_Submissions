@@ -1,35 +1,40 @@
 class Solution {
 public:
     vector<int> largestDivisibleSubset(vector<int>& nums) {
+        sort(nums.begin(), nums.end());
 
         int n = nums.size();
-        sort(begin(nums), end(nums));
 
-        vector<int> dp(n, 1), hash(n);
-        int last_ind = 0;
-        for (int i = 0; i < n; i++) {
-            hash[i] = i;
+        vector<int> last_ind(n, -1);
+        vector<int> dp(n, 1);
 
-            for (int prev = 0; prev < i; prev++) {
-                if (nums[i] % nums[prev] == 0 && dp[prev] + 1 > dp[i]) {
-                    dp[i] = dp[prev] + 1;
-                    hash[i] = prev;
+        int last_chosen = 0;
+        int maxL = 1;
+
+        for (int i = 1; i < n; i++) {
+            for (int j = 0; j < i; j++) {
+                if (nums[i] % nums[j] == 0) {
+
+                    if (dp[i] < dp[j] + 1) {
+                        dp[i] = dp[j] + 1;
+                        last_ind[i] = j;
+                    }
+
+                    if (dp[i] > maxL){
+                        maxL = dp[i];
+                   last_chosen=i;
+                   }     
                 }
-                if (dp[last_ind] < dp[i])
-                    last_ind = i;
             }
         }
 
-        vector<int> lds;
-        lds.push_back(nums[last_ind]);
+        vector<int> ans;
 
-        while (hash[last_ind] != last_ind) {
-            last_ind = hash[last_ind];
-            lds.push_back(nums[last_ind]);
+        while(last_chosen!=-1){
+            ans.push_back(nums[last_chosen]);
+            last_chosen=last_ind[last_chosen];
         }
 
-        reverse(lds.begin(), lds.end());
-
-        return lds;
+        return ans;
     }
 };
