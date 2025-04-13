@@ -1,23 +1,20 @@
 class Solution {
 public:
-   
-   int p = 1e9 + 7;
+    const int m = 1e9 + 7;
 
-    long long power(long long x, long long n){
-    if(n==0) return 1;
-    
-    long long half=power(x, n/2) % p;
+    long long Findpower(long long a, long long b) {
+        if (b == 0)
+            return 1;
 
-    return (n%2==0) ? (half*half)%p : (half*half*x)%p;
+        long long half = Findpower(a, b / 2);
+        long long res = (half * half) % m;
 
+        if (b % 2 == 1)
+            res = (res * a) % m;
+
+        return res;
     }
-
     int countGoodNumbers(long long n) {
-        long long cnt_4s = n / 2;
-        long long cnt_5s = n - n / 2;
-         
-         long long ans=(power(4, cnt_4s) % p * power(5, cnt_5s) % p)%p;
-
-         return (int)ans;
+        return (long long)(Findpower(5, (n + 1) / 2) * Findpower(4, n / 2)) % m;
     }
 };
