@@ -4,40 +4,35 @@ public:
         if (n == 1)
             return "1";
 
-        string s = countAndSay(n - 1);
-        if (s == "1")
-            return "11";
+        string str = countAndSay(n - 1);
 
-        int len = s.size();
+        int len = str.size();
+        string res;
+
         int i = 0, j = 1;
-        char ch = s[0];
-
-        string str;
+        char ch = str[0];
 
         while (1) {
-
             if (j < len) {
-
-                if (ch == s[j]) {
+                if (ch == str[j])
                     j++;
-                } else {
+                else {
                     char num = '0' + (j - i);
-                    str.push_back(num);
-                    str.push_back(ch);
+                    res.push_back(num);
+                    res.push_back(ch);
 
-                    ch = s[j];
+                    ch = str[j];
                     i = j;
                 }
-
             } else {
                 char num = '0' + (j - i);
-                str.push_back(num);
-                str.push_back(ch);
+                res.push_back(num);
+                res.push_back(ch);
 
                 break;
             }
         }
 
-        return str;
+        return res;
     }
 };
