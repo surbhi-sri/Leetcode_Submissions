@@ -1,86 +1,62 @@
 class Solution {
 public:
-
- void merge(vector<vector<int>> &arr, int start, int mid, int end, vector<long long> &smaller, vector<long long> &larger){
-        int n = mid-start+1;
-        int m = end-mid;
-        vector<vector<int>> arr1(n),arr2(m);
-        for(int i=0;i<n;i++){
-            arr1[i] = arr[start+i];
-        }
-        for(int i=0;i<m;i++){
-            arr2[i] = arr[mid+1+i];
+    void update(int i, int l, int r, vector<long long>& st, int idx) {
+        if (l == r) {
+            st[i] = 1;
+            return;
         }
 
-        int i=0,j=0,k=start;
-        while(i<n && j<m){
-            if(arr1[i][0] > arr2[j][0]){
-                smaller[arr2[j][1]] += i; // calculate no of smaller elements to left of curr element in array
-                arr[k] = arr2[j];
-                k++;
-                j++;
-            }else{
-                larger[arr1[i][1]]+=(m-j); // calculate no of larger elements to right of curr element in array
-                arr[k] = arr1[i];
-                k++;
-                i++;
-            }
-        }
+        int mid = l + (r - l) / 2;
 
-        while(i<n){
-            arr[k] = arr1[i];
-            k++;
-            i++;
-        }
+        if (idx <= mid)
+            update(2 * i + 1, l, mid, st, idx);
+        else
+            update(2 * i + 2, mid + 1, r, st, idx);
 
-        while(j<m){
-            smaller[arr2[j][1]] += n;
-            arr[k] = arr2[j];
-            k++;
-            j++;
-        }
-
+        st[i] = st[2 * i + 1] + st[2 * i + 2];
     }
 
-    void mergeSort(vector<vector<int>> &arr, int start, int end, vector<long long> &smaller, vector<long long> &larger){
-        if(start>=end) return;
-        int mid = (start+end)/2;
-        mergeSort(arr,start,mid,smaller,larger);
-        mergeSort(arr,mid+1,end,smaller,larger);
-        merge(arr,start,mid,end,smaller,larger);
-    }
+    long long querySt(int qs, int qe, int i, int l, int r,
+                      vector<long long>& st) {
+        if (l > qe || r < qs)
+            return 0;
 
-    vector<vector<long long>> generateSmallerAndLarger(vector<int>& nums) {
-        int n = nums.size();
-        vector<long long> smaller(n,0);
-        vector<long long> larger(n,0);
-        vector<vector<int>> arr;
-        for(int i=0;i<n;i++){
-            arr.push_back({nums[i],i});
-        }
-        mergeSort(arr,0,n-1,smaller,larger);
-        return {smaller,larger};
+        if (qs <= l && r <= qe)
+            return st[i];
+
+        int mid = l + (r - l) / 2;
+
+        return querySt(qs, qe, 2 * i + 1, l, mid, st) +
+               querySt(qs, qe, 2 * i + 2, mid + 1, r, st);
     }
 
     long long goodTriplets(vector<int>& nums1, vector<int>& nums2) {
-        long long ans = 0;
-        unordered_map<int,int> mp;
+        unordered_map<int, int> mp;
         int n = nums1.size();
-        for(int i=0;i<nums2.size();i++){
+
+        for (int i = 0; i < n; i++)
             mp[nums2[i]] = i;
+
+        long long cnt = 0;
+
+        vector<long long> st(4 * n);
+
+        update(0, 0, n - 1, st, mp[nums1[0]]);
+
+        for (int i = 1; i < n; i++) {
+
+            int idx = mp[nums1[i]];
+
+            long long leftCommCnt = querySt(0, idx, 0, 0, n - 1, st);
+            long long leftNotCommCnt = i - leftCommCnt;
+
+            long long eleAfterIdxNum = n - 1 - idx;
+            long long rightCommCnt = eleAfterIdxNum - leftNotCommCnt;
+
+            cnt += (leftCommCnt * rightCommCnt);
+            update(0, 0, n - 1, st, idx);
         }
 
-        vector<int> arr(n);
-        for(int i=0;i<n;i++){
-            arr[i] = mp[nums1[i]];
-        }
-
-        vector<vector<long long>> res = generateSmallerAndLarger(arr);
-        vector<long long> smaller = res[0], larger = res[1];
-        for(int i=0;i<n;i++){
-            ans+=(smaller[i]*larger[i]);
-        }
-
-        return ans; 
+        return cnt;
     }
 };
