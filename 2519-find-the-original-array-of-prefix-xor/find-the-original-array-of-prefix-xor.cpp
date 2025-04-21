@@ -4,13 +4,10 @@ public:
         int n=pref.size();
 
         vector<int> arr(n);
+        arr[0]=pref[0];
 
-        int xorr=0;
-
-        for(int i=0; i<n; i++){
-         int new_arr=xorr^pref[i];
-         arr[i]=new_arr;
-         xorr^=new_arr;
+        for(int i=1; i<n; i++){
+         arr[i]=pref[i]^pref[i-1];
         }
 
         return arr;
