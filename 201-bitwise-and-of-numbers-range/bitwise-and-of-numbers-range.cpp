@@ -1,31 +1,19 @@
 class Solution {
 public:
-    int leftmostbit(int num) {
-        int i = 0;
-        while (num) {
-            num = num >> 1;
-            i++;
-        }
-        return i;
-    }
-
     int rangeBitwiseAnd(int left, int right) {
-        if (left == right)
-            return left;
 
-        if (left + 1 == right)
-            return left & right;
 
-        int leftmostbitofleft = leftmostbit(left);
-        int leftmostbitofright = leftmostbit(right);
+        if(left==right) return left;
 
-        if (leftmostbitofleft != leftmostbitofright)
-            return 0;
+        for (int i = 1; i < 31; i++) {
+            left = left >> 1;
+            right = right >> 1;
 
-        int ans = left;
-        for (long long i = left + 1; i <= right; i++) 
-        ans &=i;
+            if (left == right) {
+                return (left << (i));
+            }
+        }
 
-        return ans;
+        return 0;
     }
 };
