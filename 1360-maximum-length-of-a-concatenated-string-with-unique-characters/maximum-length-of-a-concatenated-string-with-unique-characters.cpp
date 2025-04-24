@@ -1,48 +1,36 @@
 class Solution {
 public:
-    unordered_map<string, int> mp;
+    void solve(int idx, int temp, int& res, vector<int>& uniquecharstring) {
 
-    bool hasduplicate(string& a, string& b) {
-        unordered_set<char> st;
-        for (char ch : a) {
-            if (st.count(ch) > 0)
-                return 1;
-            st.insert(ch);
+        res = max(res, __builtin_popcount(temp));
+
+        for (int i = idx; i < uniquecharstring.size(); i++) {
+            if ((temp & uniquecharstring[i] )== 0)
+                solve(i + 1, temp | uniquecharstring[i], res, uniquecharstring);
         }
-
-        for (char ch : b) {
-            if (st.count(ch) > 0)
-                return 1;
-            st.insert(ch);
-        }
-
-        return 0;
-    }
-
-    int solve(int i, string temp, vector<string>& arr, int n) {
-        if (i >= n)
-            return temp.size();
-
-        if (mp.find(temp) != mp.end())
-            return mp[temp];
-
-        int include = 0;
-        int exclude = 0;
-
-        if (!hasduplicate(temp, arr[i])) {
-            include = solve(i + 1, temp + arr[i], arr, n);
-        }
-
-        exclude = solve(i + 1, temp, arr, n);
-
-        return mp[temp] = max(include, exclude);
     }
 
     int maxLength(vector<string>& arr) {
-        string temp = "";
-        int n = arr.size();
-        mp.clear();
+        vector<int> uniquecharstring;
 
-        return solve(0, temp, arr, n);
+        for (string& s : arr) {
+            unordered_set<char> st(begin(s), end(s));
+
+            if (st.size() != s.size())
+                continue;
+
+            int val = 0;
+            for (char& ch : s) {
+                val = (val | (1 << (ch - 'a')));
+            }
+
+            uniquecharstring.push_back(val);
+        }
+
+        int res = 0;
+
+        solve(0, 0, res, uniquecharstring);
+
+        return res;
     }
 };
