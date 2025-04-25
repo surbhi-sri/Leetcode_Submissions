@@ -4,17 +4,18 @@ public:
         int n = arr.size();
         int cnt = 0;
 
-        unordered_map<int, vector<int>> mp;
+        unordered_map<int, int> mp, total;
         int xorr = 0;
-        mp[xorr].push_back(-1);
+        mp[xorr] = -1;
+        total[xorr] = 1;
 
         for (int i = 0; i < n; i++) {
             xorr ^= arr[i];
             if (mp.find(xorr) != mp.end()) {
-                for (auto& ind : mp[xorr])
-                    cnt += (i - ind - 1);
+                cnt += total[xorr]* (i - 1) - mp[xorr];
             }
-            mp[xorr].push_back(i);
+            total[xorr]++;
+            mp[xorr] = i + mp[xorr];
         }
         return cnt;
     }
