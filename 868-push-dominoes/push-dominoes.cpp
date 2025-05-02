@@ -8,7 +8,7 @@ public:
 
         for (int i = n - 1; i >= 0; i--) {
 
-            if (l == n && dominoes[i] == '.')
+            if (l == n && dominoes[i] !='L')
                 continue;
 
             if (dominoes[i] == 'L')
