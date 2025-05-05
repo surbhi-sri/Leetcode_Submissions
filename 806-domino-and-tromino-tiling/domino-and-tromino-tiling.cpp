@@ -1,24 +1,21 @@
 class Solution {
 public:
-    
-    int m=1e9+7;
-
-    int solve(int n, vector<int> &dp){
-         if (n == 1)
-            return 1;
-        if (n == 2)
-            return 2;
-        if (n == 3)
-            return 5;
-
-        if(dp[n]!=-1) return dp[n];
-
-        return dp[n]=((2 * solve(n - 1, dp)) % m + solve(n - 3, dp) % m) % m;
-    }
+    int m = 1e9 + 7;
 
     int numTilings(int n) {
-       vector<int> dp(n+1, -1);
+        if (n == 1 || n == 2)
+            return n;
 
-       return solve(n, dp);
+        vector<int> dp(n + 1, 0);
+
+        dp[1] = 1;
+        dp[2] = 2;
+        dp[3] = 5;
+
+        for (int i = 4; i <= n; i++) {
+            dp[i] = (2 * dp[i - 1] % m + dp[i - 3] % m) % m;
+        }
+
+        return dp[n];
     }
 };
