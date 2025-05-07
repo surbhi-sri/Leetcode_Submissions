@@ -1,65 +1,69 @@
 class Solution {
 public:
-    int merge_sort(vector<int>& nums, int low, int mid, int high) {
-        vector<int> temp;
-        int cnt = 0;
-        int i = low, j = mid + 1;
+    int merge(int left, int mid, int right, vector<int>& nums) {
+        int n1 = mid - left + 1;
+        int n2 = right - mid;
 
-        while (i <= mid && j <= high) {
-            if (nums[i] <= nums[j]) {
-                temp.push_back(nums[i]);
-                i++;
-            } else {
-                temp.push_back(nums[j]);
+        vector<int> l1(n1);
+        vector<int> l2(n2);
+
+        for (int i = 0; i < n1; i++)
+            l1[i] = nums[i + left];
+        for (int i = 0; i < n2; i++)
+            l2[i] = nums[i + mid + 1];
+
+        int cnt = 0;
+        int k = left;
+        int i = 0, j = 0;
+
+        while (i < n1 && j < n2) {
+            long long int curr = l2[j];
+            if (l1[i] > (2 * curr)) {
+                cnt += (n1 - i);
                 j++;
-            }
+            } else
+                i++;
         }
 
-        while (i <= mid) {
-            temp.push_back(nums[i]);
+        i = 0, j = 0;
+
+        while (i < n1 && j < n2) {
+            if (l1[i] > l2[j])
+                nums[k] = l2[j++];
+            else
+                nums[k] = l1[i++];
+
+            k++;
+        }
+
+        while (i < n1) {
+            nums[k] = l1[i];
             i++;
+            k++;
         }
 
-        while (j <= high) {
-            temp.push_back(nums[j]);
+        while (j < n2) {
+            nums[k] = l2[j];
             j++;
+            k++;
         }
 
-        for (int k = low; k <= high; k++) {
-            nums[k] = temp[k - low];
-        }
         return cnt;
     }
 
-    int count_pair(vector<int>& nums, int low, int mid, int high) {
+    int mergesort(int left, int right, vector<int>& nums) {
+        if (left >= right)
+            return 0;
         int cnt = 0;
-        int i = low, j = mid + 1;
-        while (i <= mid && j <= high) {
-            long long int curr=nums[j];
-            if (nums[i] > 2 * curr){
-                cnt += (mid - i + 1);
-            j++;
-        }
-        else i++;
-    }
-    return cnt;
-}
+        int mid = left + (right - left) / 2;
+        cnt += mergesort(left, mid, nums);
+        cnt += mergesort(mid + 1, right, nums);
+        cnt += merge(left, mid, right, nums);
 
-    int merge(vector<int>& nums, int low, int high) {
-    int cnt = 0;
-    if (low >= high)
         return cnt;
-    int mid = (low + high) / 2;
-    cnt += merge(nums, low, mid);
-    cnt += merge(nums, mid + 1, high);
-    cnt += count_pair(nums, low, mid, high);
-    merge_sort(nums, low, mid, high);
-    return cnt;
-}
+    }
 
-int reversePairs(vector<int>& nums) {
-    int n = nums.size();
-    return merge(nums, 0, n - 1);
-}
-}
-;
+    int reversePairs(vector<int>& nums) {
+        return mergesort(0, nums.size() - 1, nums);
+    }
+};
