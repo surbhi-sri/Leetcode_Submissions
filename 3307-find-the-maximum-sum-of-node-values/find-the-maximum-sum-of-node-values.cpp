@@ -4,22 +4,24 @@ public:
     long long maximumValueSum(vector<int>& nums, int k,
                               vector<vector<int>>& edges) {
         ll sum = 0;
-        int cnt = 0;
-        int min_nuksan = INT_MAX;
+        vector<int> fayda;
 
         for (ll num : nums) {
-            if ((num ^ k) > num) {
-                sum += (num ^ k);
-                cnt++;
-            } else
-                sum += num;
+            sum += num;
 
-            min_nuksan = min((ll)min_nuksan, abs(num - (num ^ k)));
+            fayda.push_back((num ^ k) - num);
         }
 
-        if (cnt % 2 == 0)
-            return sum;
+        sort(fayda.rbegin(), fayda.rend());
 
-        return (sum - min_nuksan); 
+        int n = fayda.size();
+
+        for (int i = 0; i < n - 1; i += 2) {
+            int inc_sum = fayda[i] + fayda[i + 1];
+            if (inc_sum > 0)
+                sum += inc_sum;
+        }
+
+        return sum;
     }
 };
