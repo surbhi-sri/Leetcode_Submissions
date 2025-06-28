@@ -1,31 +1,16 @@
 class Solution {
 public:
-    int bfs(int curr, vector<vector<int>>& adj, int k, int n) {
-        queue<pair<int, int>> q;
-        q.push({curr, 0});
-        vector<bool> vis(n);
-        vis[curr] = 1;
-        int cnt = 0;
+    int dfs(int curr, vector<vector<int>>& adj, int k, int parent) {
+       if(k<0) return 0;
 
-        while (!q.empty()) {
-            int node = q.front().first;
-            int d = q.front().second;
-            q.pop();
+       int cnt=1;
 
-            if (d > k)
-                continue;
+       for(int &it:adj[curr]){
+        if(it!=parent)
+        cnt +=dfs(it, adj, k-1, curr);
+       }
 
-            cnt++;
-
-            for(auto &it:adj[node]){
-                if(!vis[it]){
-                 vis[it]=1;   
-                q.push({it, d+1});
-                }
-            }
-        }
-        
-        return cnt;
+       return cnt;
     }
 
     vector<int> findCount(vector<vector<int>>& edges, int k) {
@@ -39,7 +24,7 @@ public:
         vector<int> res(n);
 
         for (int i = 0; i < n; i++)
-            res[i] = bfs(i, adj, k, n);
+            res[i] = dfs(i, adj, k, -1);
 
         return res;
     }
