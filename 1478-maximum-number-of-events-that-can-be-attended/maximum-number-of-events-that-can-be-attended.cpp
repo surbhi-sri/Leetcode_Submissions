@@ -5,10 +5,14 @@ public:
 
         int n = events.size();
         int cnt = 0;
-        int day = events[0][0], i = 0;
+        int day, i = 0;
         priority_queue<int, vector<int>, greater<int>> pq;
 
         while (!pq.empty() || i < n) {
+         
+         if(pq.empty())
+         day=events[i][0];
+
             while (i < n && events[i][0] == day) {
                 pq.push(events[i][1]);
                 i++;
