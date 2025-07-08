@@ -3,6 +3,21 @@ public:
     int n;
     vector<vector<int>> dp;
 
+    int findNextEvent(int low, int high, int end, vector<vector<int>>& events) {
+        int ans = high + 1;
+        while (low <= high) {
+            int mid = low + (high - low) / 2;
+
+            if (events[mid][0] > end) {
+                ans = mid;
+                high = mid - 1;
+            } else
+                low = mid + 1;
+        }
+
+        return ans;
+    }
+
     int solve(vector<vector<int>>& events, int k, int idx) {
         if (idx >= n || k == 0)
             return 0;
@@ -10,22 +25,12 @@ public:
         if (dp[idx][k] != -1)
             return dp[idx][k];
 
-        int start = events[idx][0];
         int end = events[idx][1];
         int val = events[idx][2];
 
         int skip = solve(events, k, idx + 1);
 
-        int j = idx + 1;
-        for (; j < n; j++) {
-            if (events[j][0] > end)
-                break;
-        }
-
-        // using binary search with the help of upper bound
-        // vector<int> temp = {end, INT_MAX, INT_MAX};
-        // int j = upper_bound(events.begin() + idx + 1, events.end(), temp) -
-        //         events.begin();
+        int j = findNextEvent(idx + 1, n - 1, end, events);
 
         int take = val + solve(events, k - 1, j);
 
