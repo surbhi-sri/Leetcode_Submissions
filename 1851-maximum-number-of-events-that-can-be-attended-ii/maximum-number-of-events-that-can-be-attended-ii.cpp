@@ -15,11 +15,17 @@ public:
         int val = events[idx][2];
 
         int skip = solve(events, k, idx + 1);
+
         int j = idx + 1;
         for (; j < n; j++) {
             if (events[j][0] > end)
                 break;
         }
+
+        // using binary search with the help of upper bound
+        // vector<int> temp = {end, INT_MAX, INT_MAX};
+        // int j = upper_bound(events.begin() + idx + 1, events.end(), temp) -
+        //         events.begin();
 
         int take = val + solve(events, k - 1, j);
 
