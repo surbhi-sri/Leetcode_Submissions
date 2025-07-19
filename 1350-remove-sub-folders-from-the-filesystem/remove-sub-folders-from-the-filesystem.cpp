@@ -1,8 +1,7 @@
 class Solution {
 public:
     vector<string> removeSubfolders(vector<string>& folder) {
-        sort(folder.begin(), folder.end());
-        unordered_set<string> st;
+        unordered_set<string> st(folder.begin(), folder.end());
         vector<string> ans;
 
         for(string &f:folder){
@@ -15,10 +14,9 @@ public:
                 break;
             }
           }
-           if(flag){
+           if(flag)
             ans.push_back(f);
-            st.insert(f);
-           }
+          
         }
 
         return ans;
