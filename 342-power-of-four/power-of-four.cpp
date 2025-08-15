@@ -1,9 +1,11 @@
 class Solution {
 public:
     bool isPowerOfFour(int n) {
-        if(n<=0) return 0;
-       double x= log10(n)/log10(4);
- 
-       return x==(int)x;
+        if (n <= 0)
+            return 0;
+
+        if((n&(n-1))==0 && (n-1)%3==0) return 1;
+
+         return 0;
     }
 };
