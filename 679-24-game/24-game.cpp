@@ -1,0 +1,50 @@
+class Solution {
+public:
+    double epsilon = 0.1;
+
+    bool solve(vector<double>& cards) {
+        if (cards.size() == 1)
+            return abs(cards[0] - 24.0) <= epsilon;
+
+        for (int i = 0; i < cards.size(); i++) {
+            for (int j = 0; j < cards.size(); j++) {
+                if (i == j)
+                    continue;
+
+                vector<double> temp;
+
+                for (int k = 0; k < cards.size(); k++)
+                    if (k != i && k != j)
+                        temp.push_back(cards[k]);
+
+                double a = cards[i];
+                double b = cards[j];
+
+                vector<double> possibleVal = {a + b, a - b, b - a, a * b};
+
+                if (b > 0)
+                    possibleVal.push_back(a / b);
+                if (a > 0)
+                    possibleVal.push_back(b / a);
+
+                for (double& val : possibleVal) {
+                    temp.push_back(val);
+
+                    if (solve(temp))
+                        return 1;
+                    temp.pop_back();
+                }
+            }
+        }
+        return 0;
+    }
+
+    bool judgePoint24(vector<int>& cards) {
+        vector<double> num;
+
+        for (int i = 0; i < 4; i++)
+            num.push_back(1.0 * cards[i]);
+
+        return solve(num);
+    }
+};
