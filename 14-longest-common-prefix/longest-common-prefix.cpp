@@ -1,19 +1,65 @@
 class Solution {
 public:
-    string longestCommonPrefix(vector<string>& strs) {
+    class TrieNode {
+    public:
+        char data;
+        TrieNode* child[26];
+        bool isEnd;
+        int childCount;
 
-        sort(strs.begin(), strs.end());
-        string first = strs.front();
-        string last = strs.back();
+        TrieNode(char ch) {
+            data = ch;
+            for (int i = 0; i < 26; i++)
+                child[i] = NULL;
+            isEnd = 0;
+            childCount=0;
+        }
+    };
 
-        int len = min(first.size(), last.size());
-        int i = 0, j = 0;
+    class trie {
+        TrieNode* root;
 
-        while (i < len && first[i] == last[j]) {
-            i++;
-            j++;
+    public:
+        trie() { root = new TrieNode('\0'); }
+
+        void insert(const string& s) {
+            TrieNode* node = root;
+
+            for (char c : s) {
+                int idx = c - 'a';
+                if (!node->child[idx]) {
+                    node->child[idx] = new TrieNode(c);
+                    node->childCount++;
+                }
+
+                node = node->child[idx];
+            }
+            node->isEnd = 1;
         }
 
-        return first.substr(0,i);
+        string LCP() {
+            string prefix = "";
+            TrieNode* node = root;
+            while (node->childCount == 1 && node->isEnd == 0) {
+                for (int i = 0; i < 26; i++) {
+                    if (node->child[i]) {
+                        node = node->child[i];
+                        prefix.push_back(node->data);
+                        break;
+                    }
+                }
+            }
+            return prefix;
+        }
+    };
+
+    string longestCommonPrefix(vector<string>& strs) {
+        if (strs.size() == 1)
+            return strs[0];
+        trie t;
+        for (string& s : strs)
+            t.insert(s);
+
+        return t.LCP();
     }
 };
