@@ -2,6 +2,7 @@ class Solution {
 public:
     vector<vector<int>> dir = {{1, 1}, {1, -1}, {-1, -1}, {-1, 1}};
     int n, m;
+    int dp[501][501][4][2];
 
     int solve(int i, int j, int d, bool canTurn, int val,
               vector<vector<int>>& grid) {
@@ -12,19 +13,21 @@ public:
         if (i_ < 0 || j_ < 0 || i_ >= n || j_ >= m || grid[i_][j_] != val)
             return 0;
 
+        if(dp[i_][j_][d][canTurn]!=-1) return dp[i_][j_][d][canTurn];
+
         int keepMoving = 1 + solve(i_, j_, d, canTurn, val == 2 ? 0 : 2, grid);
 
         if (canTurn)
             keepMoving = max(keepMoving, 1 + solve(i_, j_, (d + 1) % 4, 0,
                                                    val == 2 ? 0 : 2, grid));
 
-        return keepMoving;
+        return dp[i_][j_][d][canTurn]=keepMoving;
     }
 
     int lenOfVDiagonal(vector<vector<int>>& grid) {
         n = grid.size();
         m = grid[0].size();
-
+       memset(dp, -1, sizeof(dp));
         int res = 0;
 
         for (int i = 0; i < n; i++) {
