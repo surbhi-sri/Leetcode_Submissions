@@ -11,10 +11,9 @@ public:
             vec.push_back(stoi(num));
         }
         int i = 0, n = vec.size();
-         string num2;
 
-        while (getline(ss2, num2, '.')) {
-            int val = stoi(num2);
+        while (getline(ss2, num, '.')) {
+            int val = stoi(num);
             if (i >= n && val > 0)
                 return -1;
             else if (i<n && vec[i] > val)
