@@ -20,7 +20,6 @@ public:
 
         if (board[i][j] != '.')
             return solve(board, i, j + 1);
-        ;
 
         for (char c = '1'; c <= '9'; c++) {
             if (check(board, i, j, c)) {
