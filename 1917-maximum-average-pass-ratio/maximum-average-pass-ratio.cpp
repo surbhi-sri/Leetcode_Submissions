@@ -1,36 +1,37 @@
-struct campare{
-    bool operator()(const pair<int, int>&a, const pair<int, int>& b){
-        double gainA = (double)(a.first+1) / (a.second + 1) - (double) a.first / a.second;
-        double gainB = (double)(b.first+1) / (b.second + 1) - (double) b.first / b.second;
-
-        return gainA < gainB;
-    }
-};
-
 class Solution {
 public:
+#define p pair<double, int>
     double maxAverageRatio(vector<vector<int>>& classes, int extraStudents) {
-        priority_queue<pair<int, int>, vector<pair<int, int>>, campare> pq;
+        int n = classes.size();
+        priority_queue<p> pq;
 
-        for(auto &c : classes){
-            pq.push({c[0], c[1]});
+        for (int j = 0; j < n; j++) {
+            double ratio0 = (double)classes[j][0] / classes[j][1];
+            double ratio1 = (double)(classes[j][0] + 1) / (classes[j][1] + 1);
+            double rise = ratio1 - ratio0;
+
+            pq.push({rise, j});
         }
 
-        while(extraStudents--){
-            auto [p, t] = pq.top();
-            pq.pop();
-            pq.push({p+1, t+1});
-        }
-
-        double ans = 0.0;
-
-        while(!pq.empty()){
-            auto [p, t] = pq.top();
+        for (int i = 0; i < extraStudents; i++) {
+            double max_rise = pq.top().first;
+            int rise_ind = pq.top().second;
             pq.pop();
 
-            ans += (double) p/t;
+            classes[rise_ind][0] += 1;
+            classes[rise_ind][1] += 1;
+
+            double ratio0 = (double)classes[rise_ind][0] / classes[rise_ind][1];
+            double ratio1 = (double)(classes[rise_ind][0] + 1) / (classes[rise_ind][1] + 1);
+            double rise = ratio1 - ratio0;
+
+            pq.push({rise, rise_ind});
         }
 
-        return ans / classes.size();
+        double total_ratio = 0.0;
+        for (int i = 0; i < n; i++)
+            total_ratio += (double)classes[i][0] / classes[i][1];
+
+        return (total_ratio / n);
     }
 };
