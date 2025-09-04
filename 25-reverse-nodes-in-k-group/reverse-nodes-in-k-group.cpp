@@ -10,46 +10,50 @@
  */
 class Solution {
 public:
-    ListNode* kthnode(ListNode* head, int k) {
-        ListNode* temp = head;
-        for (int i = 1; i < k && temp; i++)
-            temp = temp->next;
-        return temp;
-    }
-
-    ListNode* reverse(ListNode* head) {
-        if (head == NULL || head->next == NULL)
-            return head;
-        ListNode* newHead = reverse(head->next);
-        ListNode* front = head->next;
-        front->next = head;
-        head->next = NULL;
-        return newHead;
-    }
-
     ListNode* reverseKGroup(ListNode* head, int k) {
-        if (head == NULL || head->next == NULL || k == 1)
-            return head;
+        ListNode* curr = head;
+        ListNode* newHead = NULL;
+        ListNode* tail = NULL;
 
-        ListNode* temp = head;
-        ListNode* prev = NULL;
+        while (curr) {
+            ListNode* nodeHead = curr;
+            ListNode* temp = curr;
+            ListNode* nxt = NULL;
+            ListNode* prev = NULL;
+            int cnt = 0;
 
-        while (temp) {
-            ListNode* kthNode = kthnode(temp, k);
-         if(kthNode==NULL) {
-            if(prev) prev->next=temp;
-            break;
-         } 
-         ListNode *nxt=kthNode->next;
-          kthNode->next=NULL;
+            while (curr && cnt < k) {
+             nxt=curr->next;
+             curr->next=prev;
+             prev=curr;
+             curr=nxt;  
+             cnt++; 
+            }
 
-        reverse(temp); 
-        if(temp==head) head=kthNode;
-       else prev->next=kthNode;
-       
-       prev=temp;
-       temp=nxt;
+           if(cnt!=k ){
+               curr=prev;
+               prev=NULL;
+              while (cnt--) {
+             nxt=curr->next;
+             curr->next=prev;
+             prev=curr;
+             curr=nxt;  
+            } 
+         
+             if(tail) tail->next=temp;
+             else return temp;
+             break;
+            }
+
+            if(!newHead) newHead=prev;           
+
+            if(tail) tail->next=prev;
+
+            tail=nodeHead;
+                        
+
         }
-        return head;
+
+        return newHead;
     }
 };
