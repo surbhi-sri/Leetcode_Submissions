@@ -11,49 +11,35 @@
 class Solution {
 public:
     ListNode* reverseKGroup(ListNode* head, int k) {
+        if (!head || k == 1)
+            return head;
+
+        deque<ListNode*> dq;
         ListNode* curr = head;
-        ListNode* newHead = NULL;
-        ListNode* tail = NULL;
 
         while (curr) {
-            ListNode* nodeHead = curr;
-            ListNode* temp = curr;
-            ListNode* nxt = NULL;
-            ListNode* prev = NULL;
             int cnt = 0;
-
             while (curr && cnt < k) {
-             nxt=curr->next;
-             curr->next=prev;
-             prev=curr;
-             curr=nxt;  
-             cnt++; 
+                dq.push_front(curr);
+                curr = curr->next;
+                cnt++;
             }
 
-           if(cnt!=k ){
-               curr=prev;
-               prev=NULL;
-              while (cnt--) {
-             nxt=curr->next;
-             curr->next=prev;
-             prev=curr;
-             curr=nxt;  
-            } 
-         
-             if(tail) tail->next=temp;
-             else return temp;
-             break;
+            if (cnt != k)
+                break;
+
+            while (!dq.empty()) {
+                ListNode* front = dq.front();
+                ListNode* back = dq.back();
+
+                swap(front->val, back->val);
+                if (!dq.empty())
+                    dq.pop_front();
+                if (!dq.empty())
+                    dq.pop_back();
             }
-
-            if(!newHead) newHead=prev;           
-
-            if(tail) tail->next=prev;
-
-            tail=nodeHead;
-                        
-
         }
 
-        return newHead;
+        return head;
     }
 };
