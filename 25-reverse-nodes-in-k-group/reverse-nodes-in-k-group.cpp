@@ -14,30 +14,37 @@ public:
         if (!head || k == 1)
             return head;
 
-        deque<ListNode*> dq;
+        stack<ListNode*> st;
         ListNode* curr = head;
+        ListNode* prev = NULL;
 
         while (curr) {
             int cnt = 0;
-            while (curr && cnt < k) {
-                dq.push_front(curr);
-                curr = curr->next;
+            ListNode* temp = curr;
+            while (temp && cnt < k) {
+                st.push(temp);
+                temp = temp->next;
                 cnt++;
             }
 
-            if (cnt != k)
-                break;
-
-            while (!dq.empty()) {
-                ListNode* front = dq.front();
-                ListNode* back = dq.back();
-
-                swap(front->val, back->val);
-                if (!dq.empty())
-                    dq.pop_front();
-                if (!dq.empty())
-                    dq.pop_back();
+            if (cnt != k) {
+                prev->next = curr;
+                return head;
             }
+
+            while (!st.empty()) {
+                if (!prev) {
+                    prev = st.top();
+                    head = prev;
+                } else {
+                    prev->next = st.top();
+                    prev = prev->next;
+                }
+                st.pop();
+            }
+
+            prev->next = temp;
+            curr = temp;
         }
 
         return head;
