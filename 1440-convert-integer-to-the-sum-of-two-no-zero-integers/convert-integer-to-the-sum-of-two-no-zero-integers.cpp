@@ -1,24 +1,26 @@
 class Solution {
 public:
-     bool isNonZero(int x){
-            while( x > 0){
-                if( x % 10 == 0) return false;
-                x /=10; 
-            }
-            return true;
+
+    bool valid(int num, int n){
+        string s1=to_string(num);
+        string s2=to_string(n-num);
+
+        for(char &c:s1){
+            if(c=='0') return 0;
         }
-    
-      
-    
+        for(char c:s2){
+            if(c=='0') return 0;
+        }
+        return 1;
+    }
+
     vector<int> getNoZeroIntegers(int n) {
-   
-         
-      for(int a = 1; a<n ;a++){
-    int b = n-a;
-        if( (isNonZero(a) && isNonZero(b))){
-            return {a,b};
-        }
-      }
-       return {};
+       int i=1;
+
+        while(!valid(i, n)){
+            i++;
+            }
+       
+       return {i, n-i};
     }
 };
