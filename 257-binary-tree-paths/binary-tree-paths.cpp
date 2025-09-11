@@ -12,52 +12,29 @@
  */
 class Solution {
 public:
-    void PrintPath(vector<string>& ans,
-                   unordered_map<TreeNode*, TreeNode*>& parent,
-                   TreeNode* node) {
-        stack<TreeNode*> st;
-        string path;
-
-        while (node) {
-            st.push(node);
-            node = parent[node];
-        }
-
-        path = to_string(st.top()->val);
-        st.pop();
-
-        while (!st.empty()) {
-            path = path + "->" + to_string(st.top()->val);
-            st.pop();
-        }
-        
-        ans.push_back(path);
-    }
-
     vector<string> binaryTreePaths(TreeNode* root) {
         vector<string> ans;
-        stack<TreeNode*> st;
-        unordered_map<TreeNode*, TreeNode*> parent;
-        parent[root] = NULL;
 
-        st.push(root);
+        stack<pair<TreeNode*, string>> st;
+        st.push({root, to_string(root->val)});
 
         while (!st.empty()) {
-            TreeNode* node = st.top();
+            TreeNode* node = st.top().first;
+            string path = st.top().second;
             st.pop();
 
             if (!node->right && !node->left) {
-                PrintPath(ans, parent, node);
+                ans.push_back(path);
             }
 
             if (node->right) {
-                parent[node->right] = node;
-                st.push(node->right);
+                string right_path = path + "->" + to_string(node->right->val);
+                st.push({node->right, right_path});
             }
 
             if (node->left) {
-                parent[node->left] = node;
-                st.push(node->left);
+                string left_path = path + "->" + to_string(node->left->val);
+                st.push({node->left, left_path});
             }
         }
 
