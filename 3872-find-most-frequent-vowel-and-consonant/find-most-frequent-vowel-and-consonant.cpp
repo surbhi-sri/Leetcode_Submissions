@@ -1,19 +1,19 @@
 class Solution {
 public:
     int maxFreqSum(string s) {
-        int cnt[26] = {0};
-        for (char c : s)
-            cnt[c - 'a']++;
-        auto isVowel = [](int i) {
-            return i == 0 || i == 4 || i == 8 || i == 14 || i == 20;
-        };
-        int maxVowel = 0, maxConsonant = 0;
-        for (int i = 0; i < 26; ++i) {
-            if (isVowel(i)) 
-                maxVowel = max(maxVowel, cnt[i]);
-            else 
-                maxConsonant = max(maxConsonant, cnt[i]);
+        int mxv=0, mxc=0;
+        vector<int> letters(26, 0);
+
+        for(char c:s){
+           if(c=='a' || c=='e' || c=='i' || c=='o' || c=='u'){
+            letters[c-'a']++;
+            mxv=max(mxv, letters[c-'a']);
+           }else{
+             letters[c-'a']++;
+            mxc=max(mxc, letters[c-'a']);
+           } 
         }
-        return maxVowel + maxConsonant;
+      
+         return (mxv+mxc);
     }
 };
