@@ -1,6 +1,6 @@
 class FoodRatings {
 public:
-    unordered_map<string, map<int, set<string>, greater<int>>> cuisinRt;
+    unordered_map < string, set<pair<int, string>>> cuisinRt;
     unordered_map<string, pair<int, string>> foodmp;
     int n;
 
@@ -9,7 +9,7 @@ public:
         n = foods.size();
 
         for (int i = 0; i < n; i++) {
-            cuisinRt[cuisines[i]][ratings[i]].insert(foods[i]);
+            cuisinRt[cuisines[i]].insert({-1*ratings[i], foods[i]});
             foodmp[foods[i]] = {ratings[i], cuisines[i]};
         }
     }
@@ -18,16 +18,14 @@ public:
         string cuisine = foodmp[food].second;
         int oldRt = foodmp[food].first;
 
-        cuisinRt[cuisine][oldRt].erase(food);
-        if (cuisinRt[cuisine][oldRt].empty())
-            cuisinRt[cuisine].erase(oldRt);
+        cuisinRt[cuisine].erase({-1*oldRt, food});
 
-        cuisinRt[cuisine][newRating].insert(food);
-         foodmp[food].first = newRating;
+        cuisinRt[cuisine].insert({-1*newRating, food});
+        foodmp[food].first = newRating;
     }
 
     string highestRated(string cuisine) {
-        return *cuisinRt[cuisine].begin()->second.begin();
+        return cuisinRt[cuisine].begin()->second;
     }
 };
 
