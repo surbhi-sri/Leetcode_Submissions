@@ -26,13 +26,9 @@ public:
                 reverse(k.begin(), k.end());
                 int num = stoi(k);
 
-                string repeat;
                 while (num--) {
-                    repeat += word;
+                    ans.append(word);
                 }
-
-                for (char ch : repeat)
-                    ans.push_back(ch);
             }
         }
         return ans;
