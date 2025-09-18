@@ -9,8 +9,7 @@ public:
             int taskId = task[1];
             int priority = task[2];
 
-            taskTop.insert({-priority, -taskId});
-            taskMp[taskId] = {userId, priority};
+            add(userId, taskId, priority);
         }
     }
 
@@ -40,9 +39,8 @@ public:
 
         int taskId = -1 * top_ele.second;
         int userId = taskMp[taskId].first;
-        
-        taskTop.erase(top_ele);
-        taskMp.erase(taskId);
+
+        rmv(taskId);
 
         return userId;
     }
