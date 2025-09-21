@@ -1,62 +1,52 @@
 class Router {
 public:
     int limit;
-    queue<pair<int, pair<int, int>>> que;
-    unordered_map<int, vector<pair<int, int>>> mp; 
-    Router(int memoryLimit) {
-        limit = memoryLimit;
-    }
-    
+    set<pair<int, pair<int, int>>> st;  // for uniquness
+    queue<pair<int, pair<int, int>>> q; // for fifo
+    unordered_map<int, vector<int>> mp; // for destination wise time map
+
+    Router(int memoryLimit) { limit = memoryLimit; }
+
     bool addPacket(int source, int destination, int timestamp) {
-        
-        if(mp.find(destination) != mp.end()) {
-            for(auto it : mp[destination]) {
-                if(it.first == source && it.second == timestamp) return false;
-            }
-        }
-        if(que.size() >= limit) {
-            auto it = que.front();
-            int ts = it.first;
-            int src = it.second.first;
-            int dst = it.second.second;
-            mp[dst].erase(mp[dst].begin());
-            que.pop();
-        }
-        que.push({timestamp, {source, destination}});
-        mp[destination].push_back({source, timestamp});
-        return true;
-    }
-    
-    vector<int> forwardPacket() {
-        if(que.empty()) return {};
-        auto it = que.front();
-        que.pop();
-        int timeStamp = it.first;
-        int src = it.second.first;
-        int dst = it.second.second;
-        mp[dst].erase(mp[dst].begin());
-
-        return {src, dst, timeStamp};
-    }
-    
-    int getCount(int destination, int startTime, int endTime) {
-        if (mp.find(destination) == mp.end()) {
+        if (st.find({source, {destination, timestamp}}) != st.end())
             return 0;
-        }
 
-        auto& events = mp[destination];
+        if (st.size() == limit)
+            forwardPacket();
 
-        auto lower = lower_bound(events.begin(), events.end(), startTime, 
-            [](const pair<int, int>& p, int val) {
-                return p.second < val;
-            });
+        st.insert({source, {destination, timestamp}});
+        q.push({source, {destination, timestamp}});
+        mp[destination].push_back(timestamp);
 
-        auto upper = std::upper_bound(events.begin(), events.end(), endTime,
-            [](int val, const std::pair<int, int>& p) {
-                return val < p.second;
-            });
+        return 1;
+    }
 
-        return upper-lower;
+    vector<int> forwardPacket() {
+        if (st.empty())
+            return {};
+
+        auto it = q.front();
+
+        int source = it.first;
+        int destination = it.second.first;
+        int timestamp = it.second.second;
+
+        q.pop();
+        st.erase({source, {destination, timestamp}});
+
+       mp[destination].erase(mp[destination].begin());
+
+        return {source, destination, timestamp};
+    }
+
+    int getCount(int destination, int startTime, int endTime) {
+        int cnt=0;
+        auto &vec=mp[destination];
+
+         auto it1=lower_bound(vec.begin(), vec.end(), startTime);
+         auto it2=upper_bound(vec.begin(), vec.end(), endTime);
+
+         return (int)(it2-it1);
     }
 };
 
