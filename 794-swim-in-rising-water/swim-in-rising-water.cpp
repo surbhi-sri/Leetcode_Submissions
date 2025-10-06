@@ -1,82 +1,47 @@
 class Solution {
 public:
-    class DSU {
-
-        vector<int> parent, size;
-
-    public:
-        DSU(int n) {
-            parent.resize(n);
-            size.resize(n, 1);
-
-            for (int i = 0; i < n; i++)
-                parent[i] = i;
-        }
-
-        int find(int x) {
-            if (parent[x] == x)
-                return x;
-            return parent[x] = find(parent[x]);
-        }
-
-        void unions(int x, int y) {
-            int rootx = find(x);
-            int rooty = find(y);
-
-            if (rootx != rooty) {
-
-                if (size[x] < size[y]) {
-                    parent[rootx] = rooty;
-                    size[rooty] += size[rootx];
-                } else {
-                    parent[rooty] = rootx;
-                    size[rootx] += size[rooty];
-                }
-            }
-        }
-    };
-
     int swimInWater(vector<vector<int>>& grid) {
+        priority_queue<pair<int, pair<int, int>>,
+                       vector<pair<int, pair<int, int>>>,
+                       greater<pair<int, pair<int, int>>>>
+            pq;
+
+        pq.push({grid[0][0], {0, 0}});
+
         int n = grid.size();
-        int total_grid = n * n;
-        DSU ds(total_grid);
-
-        vector<pair<int, pair<int, int>>> cell;
-
-            for (int i = 0; i < n; i++) {
-            for (int j = 0; j < n; j++) {
-                cell.push_back({grid[i][j], {i, j}});
-            }
-        }
 
         vector<vector<int>> vis(n, vector<int>(n, 0));
 
-        sort(cell.begin(), cell.end());
+        vis[0][0]=1;
 
         int dr[4] = {1, 0, -1, 0};
         int dc[4] = {0, 1, 0, -1};
 
-        for (auto& cell : cell) {
-            int elevation = cell.first;
-            int r = cell.second.first;
-            int c = cell.second.second;
+        int max_ele=0;
 
-            int index = r * n + c;
+        while (!pq.empty()) {
+            auto it = pq.top();
+            int elevation = it.first;
+            int row = it.second.first;
+            int col = it.second.second;
 
-            vis[r][c] = 1;
+            pq.pop();
 
-            for(int i=0; i<4; i++){
-                int nr = dr[i] + r;
-                int nc = dc[i] + c;
+            max_ele= max(max_ele, elevation);
 
-                if(nr<n && nr>=0 && nc<n && nc>=0 && vis[nr][nc]){
-                  int neighour_index= nr*n+nc;
-                  ds.unions(index, neighour_index);
+            if (row == n - 1 && col == n - 1)
+                return max_ele;
+
+            for (int i = 0; i < 4; i++) {
+                int nr = dr[i] + row;
+                int nc = dc[i] + col;
+
+                if (nr >= 0 && nc >= 0 && nr < n && nc < n && !vis[nr][nc]) {
+                        vis[nr][nc]=1;
+                        pq.push({grid[nr][nc], {nr, nc}});
+                    }
                 }
             }
-
-            if(ds.find(0)==ds.find(n*n-1)) return elevation;
-        }
 
         return 0;
     }
