@@ -1,21 +1,39 @@
 class Solution {
 public:
-    int countCollisions(string D) {
-         int n=D.size();
-        if (n==1) return 0;
-        int l=0, r=n-1;
-        while (D[l]=='L') l++;
-        while (l<r && D[r]=='R') r--;
-        if (l>=r) return 0;
-        int col=0;
-    
-        for( ; l<=r; l++){
-            while(D[l]=='R'){
-                l++;
-                col++;
+    int countCollisions(string d) {
+        stack<char> st;
+        int collision = 0;
+        for (char c : d) {
+            if (c == 'R')
+                st.push(c);
+            else if (c == 'L') {
+                if (st.empty())
+                    continue;
+                else if (st.top() == 'R') {
+                    collision += 2;
+                    st.pop();
+                  while (!st.empty() && st.top() == 'R') {
+                        collision += 1;
+                        st.pop();
+                    }
+                    st.push('S');
+                } else
+                    collision += 1;
+
+            } else {
+                if (st.empty())
+                    st.push(c);
+                else if (st.top() == 'S')
+                    continue;
+                else {
+                    while (!st.empty() && st.top() == 'R') {
+                        collision += 1;
+                        st.pop();
+                    }
+                    st.push(c);
+                }
             }
-            if (D[l]=='L') col++;
         }
-        return col;
+        return collision;
     }
 };
