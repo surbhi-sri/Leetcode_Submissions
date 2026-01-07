@@ -13,17 +13,6 @@
 class Solution {
 public:
     int mod = 1e9 + 7;
-
-    int summation(TreeNode* root) {
-        if (!root)
-            return 0;
-
-        int left = summation(root->left);
-        int right = summation(root->right);
-
-        return left + right + root->val;
-    }
-
     int solve(TreeNode* root, int total, long long& ans) {
         if (!root)
             return 0;
@@ -42,8 +31,9 @@ public:
 
     int maxProduct(TreeNode* root) {
         //   unordered_map<TreeNode*, int> mp;
-        int total_sum = summation(root);
+        int total_sum;
         long long ans = 0;
+        total_sum = solve(root, total_sum, ans);
 
         solve(root, total_sum, ans);
 
