@@ -12,38 +12,25 @@
  */
 class Solution {
 public:
-    unordered_map<TreeNode*, int> mp;
-    int maxd = 0;
-
-    TreeNode* lca(TreeNode* root) {
-        if (!root || mp[root] == maxd)
-            return root;
-
-        TreeNode* l = lca(root->left);
-        TreeNode* r = lca(root->right);
-
-        if (l && r)
-            return root;
-        else if (l)
-            return l;
-        else
-            return r;
-    }
-
-    void depth(TreeNode* root, int level) {
+    pair<int, TreeNode*> lca(TreeNode* root) {
         if (!root)
-            return;
+            return {0, root};
 
-        mp[root] = level;
-        maxd = max(maxd, level);
+        if (root->left == NULL && root->right == NULL)
+            return {1, root};
 
-        depth(root->left, level + 1);
-        depth(root->right, level + 1);
+        auto l = lca(root->left);
+        auto r = lca(root->right);
+
+        if (l.first == r.first)
+            return {l.first + 1, root};
+
+        else if (l.first > r.first)
+            return {l.first + 1, l.second};
+
+        else
+            return {r.first + 1, r.second};
     }
 
-    TreeNode* subtreeWithAllDeepest(TreeNode* root) {
-        depth(root, 0);
-
-        return lca(root);
-    }
+    TreeNode* subtreeWithAllDeepest(TreeNode* root) { return lca(root).second; }
 };
