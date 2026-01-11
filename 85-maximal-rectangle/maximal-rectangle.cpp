@@ -1,48 +1,43 @@
 class Solution {
 public:
-    int area(vector<int>& height, int n) {
-
-        int maxArea = 0;
+    int maxArea(vector<int>& height) {
+        int area = 0;
         stack<int> st;
+        int n = height.size();
 
         for (int i = 0; i <= n; i++) {
-
-            while (!st.empty() && (i == n || height[st.top()] > height[i])) {
-
-                int h = height[st.top()];
+            int h = (i == n) ? 0 : height[i];
+            while (!st.empty() && height[st.top()] > h) {
+                int l = height[st.top()];
+                // int b=i - st.top();
                 st.pop();
 
-                int w = st.empty() ? i : i - st.top() - 1;
-
-                maxArea = max(maxArea, h * w);
+                int b = st.empty() ? i : i - st.top() - 1;
+                area = max(area, l * b);
             }
-
             st.push(i);
         }
 
-        return maxArea;
+        return area;
     }
 
     int maximalRectangle(vector<vector<char>>& matrix) {
-        int maxArea = 0;
-
+        int area = 0;
         int n = matrix.size();
         int m = matrix[0].size();
-
-        vector<int> height(m, 0);
+        vector<int> rect(m, 0);
 
         for (int i = 0; i < n; i++) {
             for (int j = 0; j < m; j++) {
-
                 if (matrix[i][j] == '1')
-                    height[j]++;
+                    rect[j] += (matrix[i][j] - '0');
                 else
-                    height[j] = 0;
+                    rect[j] = 0;
             }
 
-            maxArea = max(maxArea, area(height, m));
+            area = max(area, maxArea(rect));
         }
 
-        return maxArea;
+        return area;
     }
 };
