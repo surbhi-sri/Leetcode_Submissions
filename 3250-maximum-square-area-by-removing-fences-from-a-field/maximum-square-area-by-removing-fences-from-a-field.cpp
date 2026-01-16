@@ -2,17 +2,16 @@ class Solution {
 public:
     int maximizeSquareArea(int m, int n, vector<int>& hFences,
                            vector<int>& vFences) {
+        unordered_set<int> st;
+        hFences.push_back(1);
+        hFences.push_back(m);
+        vFences.push_back(1);
+        vFences.push_back(n);
+
         int nh = hFences.size();
         int nv = vFences.size();
 
-        unordered_set<int> st;
-
-        st.insert(m - 1);
-
         for (int i = 0; i < nh; i++) {
-            st.insert(hFences[i] - 1);
-            st.insert(m - hFences[i]);
-
             for (int j = i + 1; j < nh; j++) {
                 st.insert(abs(hFences[j] - hFences[i]));
             }
@@ -21,20 +20,13 @@ public:
         long long side = 0;
 
         for (int i = 0; i < nv; i++) {
-            if (st.count(vFences[i] - 1) > 0)
-                side = max(side, (long long)(vFences[i] - 1));
-
-            if (st.count(n - vFences[i]) > 0)
-                side = max(side, (long long)(n - vFences[i]));
 
             for (int j = i + 1; j < nv; j++) {
-                if (st.count(abs(vFences[j] - vFences[i])) > 0)
-                    side = max(side, (long long)abs(vFences[j] - vFences[i]));
+                long long diff = abs(vFences[j] - vFences[i]);
+                if (st.count(diff) > 0)
+                    side = max(side, diff);
             }
         }
-
-        if (st.count(n - 1) > 0)
-            side = max(side, (long long)(n - 1));
 
         const long long MOD = 1e9 + 7;
 
