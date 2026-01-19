@@ -15,32 +15,41 @@ public:
             }
         }
 
-        auto findSum =
-            [&](int i, int j, int k) {
-                int sum = preSum[i + k][j + k];
-                if (i > 0)
-                    sum -= preSum[i - 1][j + k];
-                if (j > 0)
-                    sum -= preSum[i + k][j - 1];
-                if (j > 0 && i > 0)
-                    sum += preSum[i - 1][j - 1];
-                return sum;
-            };
+        auto findSum = [&](int i, int j, int k) {
+            int sum = preSum[i + k][j + k];
+            if (i > 0)
+                sum -= preSum[i - 1][j + k];
+            if (j > 0)
+                sum -= preSum[i + k][j - 1];
+            if (j > 0 && i > 0)
+                sum += preSum[i - 1][j - 1];
+            return sum;
+        };
+
+        auto check = [&](int side) {
+            for (int i = 0; i + side - 1 < n; i++) {
+                for (int j = 0; j + side - 1 < m; j++) {
+
+                    int val = findSum(i, j, side-1);
+                    if (val <= threshold)
+                        return 1;
+                }
+            }
+            return 0;
+        };
 
         int bestSide = 0;
 
-        for (int i = 0; i < n; i++) {
-            for (int j = 0; j < m; j++) {
+        int low = 1;
+        int high = min(m, n);
 
-                for (int k = 0; k < min(n - i, m - j); k++) { // offset
-
-                    int val = findSum(i, j, k);
-                    if (val <= threshold)
-                        bestSide = max(bestSide, k + 1);
-                    else
-                        break;
-                }
-            }
+        while (low <= high) {
+            int mid = low + (high - low) / 2;
+            if (check(mid)) {
+                bestSide = mid;
+                low = mid + 1;
+            } else
+                high = mid - 1;
         }
 
         return bestSide;
