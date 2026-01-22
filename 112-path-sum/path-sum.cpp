@@ -14,8 +14,9 @@ class Solution {
 public:
     bool solve(TreeNode* root, int targetSum, int sum) {
         if (root->left == NULL && root->right == NULL) {
-            return targetSum == (sum + root->val);
+            return targetSum ==( sum+root->val);
         }
+
 
         return ((root->left) ? solve(root->left, targetSum, sum + root->val)
                              : 0) |
