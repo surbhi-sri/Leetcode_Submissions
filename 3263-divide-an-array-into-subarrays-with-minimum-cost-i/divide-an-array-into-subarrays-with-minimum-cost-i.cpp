@@ -1,18 +1,18 @@
 class Solution {
 public:
-    int minimumCost(vector<int>& A) {
-      int a = 51, b = 51;
+    int minimumCost(vector<int>& nums) {
+        int sum = nums[0];
+        int n = nums.size();
+        int m1 = INT_MAX, m2 = INT_MAX;
 
-        for (int i = 1; i < A.size(); i++) {
-            if (A[i] < a) {
-                b = a;
-                a = A[i];
-            } else if (A[i] < b)
-                b = A[i];
-
-            if (a == 1 && b == 1) break;
+        for (int i = 1; i < n; i++) {
+            if (m1 > nums[i]) {
+                m2 = m1;
+                m1 = nums[i];
+            }
+            else if (m2 > nums[i])
+                m2 = nums[i];
         }
-
-        return A[0] + a + b;    
+        return sum + m1 + m2;
     }
 };
