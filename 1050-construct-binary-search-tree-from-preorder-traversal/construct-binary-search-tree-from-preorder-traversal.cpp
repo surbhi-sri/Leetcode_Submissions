@@ -12,34 +12,24 @@
  */
 class Solution {
 public:
-    void insert(TreeNode*& root, TreeNode* node) {}
+    TreeNode* construct(vector<int>& pre, int &idx, int mn, int mx) {
+        if (idx >= pre.size())
+            return NULL;
+
+        int key = pre[idx];
+
+        if (key <= mn || key >= mx)
+            return NULL;
+
+        TreeNode* root = new TreeNode(key);
+        idx++;
+        root->left = construct(pre, idx, mn, key);
+        root->right = construct(pre, idx, key, mx);
+        return root;
+    }
 
     TreeNode* bstFromPreorder(vector<int>& preorder) {
-        int i, n = preorder.size();
-        TreeNode* root = new TreeNode(preorder[0]);
-
-        for (int i = 1; i < n; i++) {
-            TreeNode* temp = root;
-            TreeNode* node = new TreeNode(preorder[i]);
-            while (temp) {
-                if (node->val < temp->val) {
-                    if (temp->left)
-                        temp = temp->left;
-                    else {
-                        temp->left = node;
-                        break;
-                    }
-                } else {
-                    if (temp->right)
-                        temp = temp->right;
-                    else {
-                        temp->right = node;
-                        break;
-                    }
-                }
-            }
-        }
-
-        return root;
+        int idx=0;
+        return construct(preorder, idx, 0, 1001);
     }
 };
